@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+academic_risk.db
+.vscode/

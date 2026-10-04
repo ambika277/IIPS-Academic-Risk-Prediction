@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IIPS Academic Risk Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 28px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+        }
+        h2 {
+            margin-top: 0;
+            color: #1e293b;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 14px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #334155;
+            font-size: 14px;
+        }
+        input, select {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+            background: #fff;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+        button {
+            width: 100%;
+            background-color: #2563eb;
+            color: white;
+            padding: 11px;
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        button:hover {
+            background-color: #1d4ed8;
+        }
+        .result-box {
+            display: none;
+            margin-top: 24px;
+            padding: 16px;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+        }
+        .result-box h3 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            color: #0f172a;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 6px;
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 6px 0;
+            font-size: 14px;
+            color: #334155;
+        }
+        .result-row strong {
+            color: #0f172a;
+        }
+        .badge {
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .badge-LOW { background: #dcfce7; color: #166534; }
+        .badge-MEDIUM { background: #fef9c3; color: #854d0e; }
+        .badge-HIGH { background: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>IIPS Risk Predictor</h2>
+    <form id="riskForm">
+        <div class="form-group">
+            <label for="student_id">Student ID</label>
+            <input type="text" id="student_id" placeholder="Enter student roll / ID" required>
+        </div>
+
+        <div class="form-group">
+            <label for="full_name">Student Name</label>
+            <input type="text" id="full_name" placeholder="Enter full name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="semester">Semester</label>
+            <select id="semester" required>
+                <option value="1">Semester 1</option>
+                <option value="2">Semester 2</option>
+                <option value="3">Semester 3</option>
+                <option value="4">Semester 4</option>
+                <option value="5">Semester 5</option>
+                <option value="6">Semester 6</option>
+                <option value="7">Semester 7</option>
+                <option value="8">Semester 8</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="attendance">Attendance (%)</label>
+            <input type="number" id="attendance" step="0.1" min="0" max="100" placeholder="e.g. 75" required>
+        </div>
+
+        <div class="form-group">
+            <label for="current_marks">Current Marks</label>
+            <input type="number" id="current_marks" step="0.1" min="0" max="100" placeholder="e.g. 52" required>
+        </div>
+
+        <div class="form-group">
+            <label for="previous_marks">Previous Marks</label>
+            <input type="number" id="previous_marks" step="0.1" min="0" max="100" placeholder="e.g. 60" required>
+        </div>
+
+        <button type="submit">Calculate Risk & Save</button>
+    </form>
+
+    <div class="result-box" id="resultBox">
+        <h3>Evaluation Summary</h3>
+        <div class="result-row"><span>Attendance Risk:</span><strong id="outAttendanceRisk"></strong></div>
+        <div class="result-row"><span>Assessment Risk:</span><strong id="outAssessmentRisk"></strong></div>
+        <div class="result-row"><span>Trend Risk:</span><strong id="outTrendRisk"></strong></div>
+        <div class="result-row"><span>Overall Risk:</span><strong id="outRiskPct"></strong></div>
+        <div class="result-row"><span>Risk Category:</span><span id="outRiskLevel" class="badge"></span></div>
+    </div>
+</div>
+
+<script>
+document.getElementById('riskForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const payload = {
+        student_id: document.getElementById('student_id').value,
+        full_name: document.getElementById('full_name').value,
+        semester: parseInt(document.getElementById('semester').value),
+        attendance: parseFloat(document.getElementById('attendance').value),
+        current_marks: parseFloat(document.getElementById('current_marks').value),
+        previous_marks: parseFloat(document.getElementById('previous_marks').value)
+    };
+
+    const res = await fetch('/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+
+    // Display all values formatted with two decimal places and %
+    document.getElementById('outAttendanceRisk').textContent = data.attendance_risk.toFixed(2) + "%";
+    document.getElementById('outAssessmentRisk').textContent = data.assessment_risk.toFixed(2) + "%";
+    document.getElementById('outTrendRisk').textContent = data.trend_risk.toFixed(2) + "%";
+    document.getElementById('outRiskPct').textContent = data.risk_percentage.toFixed(2) + "%";
+    
+    const badge = document.getElementById('outRiskLevel');
+    badge.textContent = data.risk_level;
+    badge.className = 'badge badge-' + data.risk_level;
+
+    document.getElementById('resultBox').style.display = 'block';
+    document.getElementById('riskForm').reset();
+});
+</script>
+</body>
+</html>
