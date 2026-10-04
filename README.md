@@ -1,34 +1,71 @@
-# IIPS Academic Risk Prediction System
+IIPS Academic Risk Prediction System
+An Object-Oriented Analysis and Design (OOAD) project to evaluate and predict academic risk levels for students based on attendance metrics and assessment performance trends.
 
-An Object-Oriented Analysis and Design (OOAD) project designed to evaluate and predict academic risk levels for students based on attendance metrics and assessment performance trends.
+Key Features
+Attendance Risk: Evaluates risk below the 75% attendance threshold.
 
----
+Assessment Risk: Evaluates risk below the passing benchmark of 50 marks.
 
-## 📌 Features
+Trend Risk: Identifies downward performance trajectories between consecutive exams.
 
-- **Attendance Risk Evaluation:** Calculates risk based on standard attendance minimum thresholds.
-- **Assessment Risk Analysis:** Measures performance deficit against passing benchmarks.
-- **Trend Risk Detection:** Identifies deteriorating performance between sequential assessments.
-- **Weighted Risk Scoring:** Generates an overall risk percentage and categorizes students into **LOW**, **MEDIUM**, or **HIGH** risk levels.
-- **Database Persistence:** Automatically logs evaluations and student details into a local SQLite database.
-- **Interactive UI:** User-friendly web portal powered by Flask and HTML5.
+Semester Tracking: Supports semester-wise evaluation records (Semesters 1 through 8).
 
----
+SQLite Database: Automatically logs student evaluations and historical records.
 
-## 🏗️ Project Architecture
+Interactive Web UI: Clean interface built with Flask and HTML5.
 
-```text
-OOAD-Lab-Assignment/
-├── app.py               # Flask backend & routing
-├── risk_engine.py       # Core prediction algorithms & risk scoring logic
-├── schema.sql           # Database schema & table definitions
-├── templates/
-│   └── index.html       # Frontend interface
-└── README.md            # Project documentation
+Project Architecture
+app.py: Flask application, routing, and database integration
 
-🧮 Risk Calculation LogicThe system evaluates academic risk using three primary metrics:Attendance Risk:$$\text{Attendance Risk} = \max\left(0, \frac{75 - \text{Attendance}}{75} \times 100\right)$$(Applies when attendance is below $75\%$)Assessment Risk:$$\text{Assessment Risk} = \max\left(0, \frac{50 - \text{Current Marks}}{50} \times 100\right)$$(Applies when current score is below $50$ marks)Trend Risk:$$\text{Trend Risk} = \max\left(0, \min\left(100, \frac{\text{Previous Marks} - \text{Current Marks}}{50} \times 100\right)\right)$$(Triggers when previous marks exceed current marks)Overall Risk Formula:$$\text{Total Risk} = (0.4 \times \text{Attendance Risk}) + (0.4 \times \text{Assessment Risk}) + (0.2 \times \text{Trend Risk})$$⚙️ Installation & SetupPrerequisitesPython 3.8+ installed on your system.1. Clone the RepositoryBashgit clone [https://github.com/ambika277/IIPS-Academic-Risk-Prediction.git](https://github.com/ambika277/IIPS-Academic-Risk-Prediction.git)
-cd IIPS-Academic-Risk-Prediction
-2. Install DependenciesBashpip install flask
-3. Run the ApplicationBashpython app.py
-4. Access the Web AppOpen your browser and navigate to:Plaintext[http://127.0.0.1:5000/](http://127.0.0.1:5000/)
-🗄️ Database DesignThe database schema (schema.sql) contains two main relational tables:students: Stores student identifier, full name, semester, and timestamp.risk_evaluations: Stores each calculated risk assessment, individual metric scores, and final category classifications linked via foreign key
+risk_engine.py: Core risk computation algorithms
+
+schema.sql: Database schema and index definitions
+
+templates/index.html: Web frontend interface
+
+README.md: Project documentation
+
+Risk Calculation Formulae
+Attendance Risk (%):
+
+Calculates the deficit when attendance is below 75%:
+
+max(0, (75 - Attendance) / 75 * 100)
+
+Assessment Risk (%):
+
+Calculates the deficit when marks are below 50:
+
+max(0, (50 - Current Marks) / 50 * 100)
+
+Trend Risk (%):
+
+Measures the drop between previous and current marks:
+
+max(0, (Previous Marks - Current Marks) / 50 * 100)
+
+Total Risk Percentage:
+
+Total Risk = (0.4 * Attendance Risk) + (0.4 * Assessment Risk) + (0.2 * Trend Risk)
+
+Risk Categories
+HIGH Risk: Total Risk >= 70%
+
+MEDIUM Risk: Total Risk between 35% and 69%
+
+LOW Risk: Total Risk < 35%
+
+Setup and Execution
+Install Flask
+
+Bash
+pip install flask
+Run Application
+
+Bash
+python app.py
+Open in Browser
+
+Navigate to: http://127.0.0.1:5000/
+
+
