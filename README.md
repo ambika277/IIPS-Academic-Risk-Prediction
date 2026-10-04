@@ -1,8 +1,8 @@
-IIPS Academic Risk Prediction System
+🎓 IIPS Academic Risk Prediction System
 
 An Object-Oriented Analysis and Design (OOAD) project to evaluate and predict academic risk levels for students based on attendance metrics and assessment performance trends.
 
-Key Features
+✨ Key Features
 
 Attendance Risk: Evaluates risk below the 75% attendance threshold.
 
@@ -16,7 +16,7 @@ SQLite Database: Automatically logs student evaluations and historical records.
 
 Interactive Web UI: Clean interface built with Flask and HTML5.
 
-Project Architecture
+📂 Project Architecture
 
 app.py: Flask application, routing, and database integration
 
@@ -28,7 +28,7 @@ templates/index.html: Web frontend interface
 
 README.md: Project documentation
 
-Risk Calculation Formulae
+📐 Risk Calculation Formulae
 
 Attendance Risk (%):
 
@@ -52,7 +52,7 @@ Total Risk Percentage:
 
 Total Risk = (0.4 * Attendance Risk) + (0.4 * Assessment Risk) + (0.2 * Trend Risk)
 
-Risk Categories
+📊 Risk Categories
 
 HIGH Risk: Total Risk >= 70%
 
@@ -60,7 +60,7 @@ MEDIUM Risk: Total Risk between 35% and 69%
 
 LOW Risk: Total Risk < 35%
 
-Setup and Execution
+🚀 Setup and Execution
 
 Install Flask
 
